@@ -41,6 +41,8 @@ namespace HybridCLR.Editor.Installer
                 return _curVersion.isTuanjieEngine? v.unity_version == $"{_curVersion.major}-tuanjie"
 #if UNITY_6000_3_OR_NEWER
                     : v.unity_version == "6000.3.x"
+#elif UNITY_6000_5_OR_NEWER
+                    : v.unity_version == "6000.5.x"
 #else
                     : v.unity_version == _curVersion.major.ToString()
 #endif
@@ -141,6 +143,8 @@ namespace HybridCLR.Editor.Installer
                 case 2023: return "2023.2.0";
                 #if UNITY_6000_3_OR_NEWER
                 case 6000: return "6000.3.0";
+                #elif UNITY_6000_5_OR_NEWER
+                case 6000: return "6000.5.0";
                 #else
                 case 6000: return "6000.0.0";
                 #endif
