@@ -22,8 +22,6 @@ namespace HybridCLR.Editor.Installer
 
         private const string il2cpp_plus_repo_path = "il2cpp_plus_repo";
 
-        public int MajorVersion => _curVersion.major;
-
         private readonly UnityVersion _curVersion;
 
         private readonly HybridclrVersionManifest _versionManifest;
@@ -37,9 +35,9 @@ namespace HybridCLR.Editor.Installer
         {
             _curVersion = ParseUnityVersion(Application.unityVersion);
             _versionManifest = GetHybridCLRVersionManifest();
-            _curDefaultVersion = _versionManifest.versions.FirstOrDefault(v => {
+                _curDefaultVersion = _versionManifest.versions.FirstOrDefault(v => {
                 return _curVersion.isTuanjieEngine? v.unity_version == $"{_curVersion.major}-tuanjie"
-#if UNITY_6000_3_OR_NEWER
+#if UNITY_6000_3_OR_NEWER && !UNITY_6000_5_OR_NEWER
                     : v.unity_version == "6000.3.x"
 #elif UNITY_6000_5_OR_NEWER
                     : v.unity_version == "6000.5.x"
@@ -129,25 +127,33 @@ namespace HybridCLR.Editor.Installer
 
         public string GetCurrentUnityVersionMinCompatibleVersionStr()
         {
-            return GetMinCompatibleVersion(MajorVersion);
+            return GetMinCompatibleVersion(_curVersion.major, _curVersion.minor1);
         }
 
-        public string GetMinCompatibleVersion(int majorVersion)
+        private string GetMinCompatibleVersion(int majorVersion, int minorVersion)
         {
             switch(majorVersion)
             {
-                case 2019: return "2019.4.0";
-                case 2020: return "2020.3.0";
-                case 2021: return "2021.3.0";
-                case 2022: return "2022.3.0";
-                case 2023: return "2023.2.0";
-                #if UNITY_6000_3_OR_NEWER
-                case 6000: return "6000.3.0";
-                #elif UNITY_6000_5_OR_NEWER
-                case 6000: return "6000.5.0";
-                #else
-                case 6000: return "6000.0.0";
-                #endif
+            case 2019: return "2019.4.0";
+            case 2020: return "2020.3.0";
+            case 2021: return "2021.3.0";
+            case 2022: return "2022.3.0";
+            case 2023: return "2023.2.0";
+            case 6000:
+            {
+                if (minorVersion < 3)
+                {
+                    return "6000.0.0";
+                }
+                else if (minorVersion < 5)
+                {
+                    return "6000.3.0";
+                }
+                else
+                {
+                    return "6000.5.0";
+                }
+            }
                 default: return $"2020.3.0";
             }
         }
