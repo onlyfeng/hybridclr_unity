@@ -1,5 +1,13 @@
 # ReleaseLog
 
+## 8.14.1
+
+Release Data: 2026-08-18.
+
+### Editor
+
+- fix: fix InstallerController install branch 6000.3.x on 6000.5.x incorrectly
+
 ## 8.14.0
 
 Release Data: 2026-08-18.
